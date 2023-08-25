@@ -1,21 +1,19 @@
-const Discord = require('discord.js');
-const { Client } = require("discord.js");
-const { Intents } = require('discord.js');
-const robots = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+// Require the necessary discord.js classes
+const { Client, Events, GatewayIntentBits } = require('discord.js');
+const { token, prefix } = require('./config.json');
 
-const fs = require('fs');
-let { prefix, token } = require('./config.json');
+// Create a new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
 
 
-const quenue = new Map();
-robots.on("ready", () => {
-    console.log('bot started');
+client.once(Events.ClientReady, c => {
+    console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
+client.on("messageCreate", (message) => {
+    
+    console.log(`A message has been sent in ${message.channel} as ${message.content}`);
 
-
-//event call after each sending message
-robots.on('message', async message => {
     if (message.author.bot) {
         return;
     }
@@ -46,13 +44,8 @@ robots.on('message', async message => {
             message.channel.send("unknown command");
         }
     }
-       
+
 });
 
 
-
-
-
-
-
-robots.login(token);
+client.login(token);
